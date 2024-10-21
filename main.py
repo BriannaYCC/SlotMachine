@@ -1,6 +1,7 @@
 # Slot Machine Game by Brianna Ysabel Cabuay
-
+from itertools import count
 from random import randint
+from collections import Counter
 
 # allows user to deposit money
 def deposit():
@@ -13,19 +14,24 @@ def deposit():
         print(f"Invalid input → {e}\n Try again.")
         return deposit()
     return round(bet_Amt, 2)
+#allows withdrawing of earnings
 def withdraw(earnings : float, withdraw : float):
     if earnings < 0:
         print("There is nothing to withdraw!")
         return
     total = round(earnings - withdraw, 2)
     return total
-def slotGame():
+#slot game
+def slotGame(earnings : float):
+    #winning combinations
     winning_slots = {
         'row_0': {'col_0': "🍒", 'col_1': "🍒", 'col_2': "🍒"},
         'row_1': {'col_0': "𝟽", 'col_1': "𝟽", 'col_2': "𝟽"},
         'row_2': {'col_0': "🐲", 'col_1': "🐲", 'col_2': "🐲"}
     }
+    #all slot possibilities
     slot_icons = ["🐲","🍒", "𝟽", "💰", "🍍"]
+    #placeholder for user's slots
     game_slots = {
         'row_0': {'col_0' : "", 'col_1': "", 'col_2': ""},
         'row_1': {'col_0': "", 'col_1': "", 'col_2': ""},
@@ -38,14 +44,29 @@ def slotGame():
     for row_index in game_slots:
         row = list(game_slots[row_index].values())
         print(row)
+
+#### IN-PROGRESS: checking for a win
+    all_icons = ""
+    for row_index in game_slots:
+        for icon in game_slots[row_index].values():
+            all_icons = all_icons + icon
+    for i in range(len(slot_icons)):
+        occurrences = all_icons.count(slot_icons[i])
+        if occurrences == 3:
+            win = slot_icons[i]
+            break
+
+    if not win == "":
+        earnings = earnings + 100
+        return earnings
     # return game_slots
-    pass
+    return earnings
 #main
 money = deposit()
 print(f"You have deposited: ${deposit}")
 
-slotGame()
+money = slotGame(money)
 
-withdraw_Amt = float(input(f"You have $, how much would you like to withdraw?"))
+withdraw_Amt = float(input(f"You have ${money}, how much would you like to withdraw?"))
 withdraw(money, withdraw_Amt)
 
